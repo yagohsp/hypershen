@@ -1,0 +1,24 @@
+@use 'colors';
+
+.main-bar {
+  background-color: #45306a;
+  min-height: 30px;
+
+}
+
+box {
+  margin: 0 8px;
+}
+
+.audio-menu-button {
+
+  popover {
+    min-width: 40em;
+
+    .audio-output-item {
+      .audio-slider {
+        min-width: 20em;
+      }
+    }
+  }
+}
