@@ -6,18 +6,21 @@
 
 }
 
+button {
+  // margin: 0 14px;
+}
+
 box {
-  margin: 0 8px;
+  // margin: 0 14px;
 }
 
 .audio-menu-button {
-
   popover {
     min-width: 40em;
 
     .audio-output-item {
       .audio-slider {
-        min-width: 20em;
+        min-width: 15em;
       }
     }
   }

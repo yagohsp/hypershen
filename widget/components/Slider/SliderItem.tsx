@@ -1,6 +1,17 @@
 import AstalWp from "gi://AstalWp"
 import { SliderIcon } from "./SliderIcon"
 import Pango from "gi://Pango?version=1.0"
+import GLib from "gi://GLib?version=2.0"
+
+function getIconByPid(pid: number) {
+  try {
+    const exe = GLib.file_read_link(`/proc/${pid}/exe`)
+    print(exe)
+  } catch (e) {
+    log(`exePathForPid error: ${e}`)
+    return null
+  }
+}
 
 export const SliderItem = ({ type, stream }: SliderItemProps): JSX.Element => {
   return (
@@ -10,8 +21,9 @@ export const SliderItem = ({ type, stream }: SliderItemProps): JSX.Element => {
         ellipsize={Pango.EllipsizeMode.END}
         maxWidthChars={1}
         hexpand
-        label={stream.name}
+        label={`${stream.description} - ${stream.name}`}
       />
+      <image file={stream.icon} />
       <SliderIcon type={type} stream={stream} />
       <slider
         class="audio-slider"
@@ -22,9 +34,6 @@ export const SliderItem = ({ type, stream }: SliderItemProps): JSX.Element => {
           stream.set_volume(value.value)
         }}
       />
-
-      {/* <Slider type={type} stream={stream} /> */}
-      {/* <SliderPercentage type={type} stream={stream} /> */}
     </box>
   )
 }

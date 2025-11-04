@@ -7,7 +7,8 @@
 
 set -euo pipefail
 
-WATCH_DIR="$HOME/y/ags/widget"
+WATCH_DIR1="$HOME/y/hypershen/styles"
+WATCH_DIR2="$HOME/y/hypershen/widget"
 CMD="ags run app.tsx"   # <-- set the command (no arguments) you want to run
 
 if ! command -v inotifywait >/dev/null 2>&1; then
@@ -48,11 +49,11 @@ cleanup() {
 }
 trap cleanup SIGINT SIGTERM
 
-echo "[watch] watching: $WATCH_DIR"
+echo "[watch] watching: $WATCH_DIR1 $WATCH_DIR2"
 start_cmd
 
 # watch for common write/create/remove/move events
-inotifywait -m -r -e close_write,create,move,delete --format '%w%f %e' "$WATCH_DIR" |
+inotifywait -m -r -e close_write,create,move,delete --format '%w%f %e' "$WATCH_DIR1" "$WATCH_DIR2" |
 while read -r path ev; do
     echo "[watch] change detected: $path ($ev) — restarting"
     stop_cmd
