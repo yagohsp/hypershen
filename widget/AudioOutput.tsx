@@ -1,7 +1,8 @@
-import { createBinding, For, createState, createComputed } from "ags"
+import { createBinding, For, createState, createComputed, With } from "ags"
 import AstalWp from "gi://AstalWp"
 import { Gtk } from "ags/gtk4"
 import Gio from "gi://Gio?version=2.0"
+import Pango from "gi://Pango"
 
 const apps = Gio.app_info_get_all()
 
@@ -22,86 +23,113 @@ function fetchIcon(appName: string) {
 
 export function AudioOutput() {
   const wp = AstalWp.get_default()
-  const [appsVolume, setAppVolumes] = createState<
-    Map<
-      string,
-      {
-        volume: number
-        streams: Map<number, AstalWp.Stream>
-      }
-    >
-  >(new Map())
+  const [appsVolume, setAppVolumes] = createState<{
+    [serial: string]: AstalWp.Stream
+  }>({})
 
   wp.audio.connect("stream-added", (_, stream) => {
     const appName = stream.get_description()
     if (!appName) return
-    const _appsVolume = appsVolume.get()
 
-    const app = _appsVolume.get(appName)
-    if (!app) {
-      const streamsMap = new Map()
-      streamsMap.set(stream.id, stream)
-
-      _appsVolume.set(appName, {
-        volume: stream.volume,
-        streams: streamsMap,
-      })
-      setAppVolumes(new Map(_appsVolume.entries()))
-      return
-    }
-
-    if (!app.streams.get(stream.id)) {
-      stream.set_volume(app.volume)
-
-      app.streams.set(stream.id, stream)
-
-      _appsVolume.set(appName, {
-        volume: stream.volume,
-        streams: app.streams,
-      })
-      setAppVolumes(new Map(_appsVolume.entries()))
-    }
+    const _appsVolume = { ...appsVolume.get() }
+    _appsVolume[stream.serial] = stream
+    setAppVolumes(_appsVolume)
   })
 
-  function handleChangeVolume(appName: string, volume: number) {
-    const apps = appsVolume.get()
-    const app = apps.get(appName)
-    if (!app) return
+  wp.audio.connect("stream-removed", (_, stream) => {
+    const appName = stream.get_description()
+    if (!appName) return
 
-    app!.streams.forEach((stream) => {
-      stream.set_volume(volume)
+    const _appsVolume = appsVolume.get()
+    delete _appsVolume[stream.serial]
+    setAppVolumes(_appsVolume)
+  })
+
+  const appVolumesList = createComputed((get) => {
+    const apps = get(appsVolume)
+
+    const appsSorted = Object.values(apps).sort((a, b) => {
+      if (a.description > b.description) return 1
+      return -1
     })
-  }
+
+    return appsSorted
+  })
 
   return (
     <menubutton class="audio-menu-button">
       <image iconName={createBinding(wp.defaultSpeaker, "volumeIcon")} />
       <popover>
-        <box>
-          <slider
-            widthRequest={260}
-            onChangeValue={({ value }) => wp.defaultSpeaker.set_volume(value)}
-            value={createBinding(wp.defaultSpeaker, "volume")}
-          />
-        </box>
+        <box
+          spacing={10}
+          orientation={Gtk.Orientation.VERTICAL}
+          class="audio-output-list"
+        >
+          <box>
+            <slider
+              onChangeValue={({ value }) => wp.defaultSpeaker.set_volume(value)}
+              value={createBinding(wp.defaultSpeaker, "volume")}
+              min={0}
+              max={1}
+              hexpand
+            />
+          </box>
 
-        <box orientation={Gtk.Orientation.VERTICAL} class="box">
-          <For each={appsVolume}>
-            {(appVolume) => {
-              const [appName, { volume }] = appVolume
+          <For each={appVolumesList}>
+            {(stream) => {
+              const icon = fetchIcon(stream.description.toLowerCase())
+              const muted = createBinding(stream, "mute")
               return (
-                <box class="audio-output-item">
-                  <image
-                    icon_size={Gtk.IconSize.LARGE}
-                    gicon={fetchIcon(appName)}
+                <box
+                  spacing={10}
+                  orientation={Gtk.Orientation.HORIZONTAL}
+                  class="audio-item"
+                >
+                  <box>
+                    <With value={muted}>
+                      {(value) => (
+                        <button
+                          onClicked={() => stream.set_mute(!stream.mute)}
+                          class={value ? "audio-button-muted" : "audio-button"}
+                        >
+                          {icon ? (
+                            <image
+                              icon_size={Gtk.IconSize.LARGE}
+                              gicon={icon}
+                            />
+                          ) : (
+                            <image
+                              icon_size={Gtk.IconSize.LARGE}
+                              iconName={stream.icon}
+                            />
+                          )}
+                        </button>
+                      )}
+                    </With>
+                  </box>
+                  <label
+                    class="audio-name"
+                    label={stream.name}
+                    maxWidthChars={1}
+                    ellipsize={Pango.EllipsizeMode.END}
+                    hexpand
+                    xalign={0}
                   />
+                  {/* <label */}
+                  {/*   class="audio-description" */}
+                  {/*   label={stream.description} */}
+                  {/*   maxWidthChars={10} */}
+                  {/*   ellipsize={Pango.EllipsizeMode.END} */}
+                  {/*   hexpand */}
+                  {/*   halign={Gtk.Align.START} */}
+                  {/* /> */}
                   <slider
                     class="audio-slider"
-                    value={volume}
+                    value={stream.volume}
                     min={0}
                     max={1}
-                    onChangeValue={(value) => {
-                      handleChangeVolume(appName, value.value)
+                    onChangeValue={(e) => {
+                      stream.set_volume(e.value)
                     }}
                   />
                 </box>

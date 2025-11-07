@@ -6,19 +6,24 @@
 
 }
 
-button {
-  // margin: 0 14px;
-}
-
-box {
-  // margin: 0 14px;
-}
-
 .audio-menu-button {
-  popover {
-    min-width: 40em;
+  .audio-output-list {
+    min-width: 25em;
+    padding: 8px;
 
-    .audio-output-item {
+    .audio-item {
+      .audio-name {
+        min-width: 12em;
+      }
+
+      // .audio-description {
+      //   min-width: 12em;
+      // }
+
+      .audio-button-muted {
+        background-color: #fa0035;
+      }
+
       .audio-slider {
         min-width: 15em;
       }
