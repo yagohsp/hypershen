@@ -1,7 +1,7 @@
 import { createBinding, For, createState, createComputed, With } from "ags"
 import AstalWp from "gi://AstalWp"
 import { Gtk } from "ags/gtk4"
-import Gio from "gi://Gio?version=2.0"
+import Gio from "gi://Gio"
 import Pango from "gi://Pango"
 
 const apps = Gio.app_info_get_all()

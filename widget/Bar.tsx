@@ -4,6 +4,7 @@ import Gdk from "gi://Gdk?version=4.0"
 import { onCleanup } from "ags"
 import { AudioOutput } from "./AudioOutput"
 import Time from "./Time"
+import AudioBar from "./AudioBar"
 
 export default function Bar({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
   let win: Astal.Window
@@ -17,21 +18,27 @@ export default function Bar({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
   })
 
   return (
-    <window
-      $={(self) => (win = self)}
-      visible
-      class="main-bar"
-      gdkmonitor={gdkmonitor}
-      exclusivity={Astal.Exclusivity.EXCLUSIVE}
-      anchor={TOP | LEFT | RIGHT}
-      application={app}
-    >
-      <centerbox>
-        <box $type="end">
-          <AudioOutput />
-          <Time />
-        </box>
-      </centerbox>
-    </window>
+    <>
+      <window
+        $={(self) => {
+          win = self
+        }}
+        visible
+        class="main-bar"
+        gdkmonitor={gdkmonitor}
+        exclusivity={Astal.Exclusivity.EXCLUSIVE}
+        anchor={TOP | LEFT | RIGHT}
+        application={app}
+      >
+        <centerbox>
+          <box $type="end">
+            <AudioOutput />
+            <Time />
+          </box>
+        </centerbox>
+      </window>
+
+      <AudioBar />
+    </>
   )
 }
