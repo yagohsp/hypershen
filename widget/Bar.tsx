@@ -5,6 +5,7 @@ import { onCleanup } from "ags"
 import { AudioOutput } from "./AudioOutput"
 import Time from "./Time"
 import AudioBar from "./AudioBar"
+import { Gtk } from "ags/gtk4"
 
 export default function Bar({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
   let win: Astal.Window
@@ -16,6 +17,34 @@ export default function Bar({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
     // is run from the parent <For> which allows us to destroy the window
     win.destroy()
   })
+
+  const icons = Gtk.IconTheme.get_for_display(Gdk.Display.get_default()!)
+
+  return (
+    <window
+      $={(self) => {
+        win = self
+      }}
+      visible
+      class="main-bar"
+      gdkmonitor={gdkmonitor}
+      exclusivity={Astal.Exclusivity.EXCLUSIVE}
+      anchor={TOP | LEFT | RIGHT}
+      application={app}
+    >
+      <scrolledwindow hexpand vexpand>
+        <Gtk.FlowBox
+          selectionMode={Gtk.SelectionMode.NONE}
+          rowSpacing={6}
+          columnSpacing={6}
+        >
+          {icons.iconNames.map((icon) => (
+            <image iconName={icon} pixelSize={24} />
+          ))}
+        </Gtk.FlowBox>
+      </scrolledwindow>
+    </window>
+  )
 
   return (
     <>
