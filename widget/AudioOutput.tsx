@@ -59,7 +59,7 @@ export function AudioOutput() {
   return (
     <menubutton class="audio-menu-button">
       <image iconName={createBinding(wp.defaultSpeaker, "volumeIcon")} />
-      <popover>
+      <popover class="audio-popover">
         <box
           spacing={10}
           orientation={Gtk.Orientation.VERTICAL}

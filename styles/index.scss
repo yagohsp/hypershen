@@ -1,5 +1,42 @@
 @use 'style';
+@use 'colors';
 
 * {
   // all: unset;
+  font-family: "IBM Plex Sans", sans-serif;
+}
+
+button {
+  min-width: 28px;
+  min-height: 28px;
+  padding: 0 8px;
+  border-radius: 0;
+  outline: none;
+
+  color: colors.$text;
+  background-color: colors.$bg-button;
+
+  box-shadow: colors.$box-shadow;
+}
+
+button:active {
+  box-shadow: colors.$box-shadow;
+}
+
+trough {
+  background-color: colors.$white;
+}
+
+highlight {
+  background-color: colors.$text;
+  background-image: image(rgb(0, 0, 0, 0));
+}
+
+slider {
+  box-shadow: 0 0 2px 1px #fff;
+}
+
+separator {
+  background-color: colors.$shadow;
+  min-width: 2px;
 }

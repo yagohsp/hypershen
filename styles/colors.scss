@@ -1,1 +1,37 @@
-$background: #cdd6f4;
+$black: #000;
+$white: #fff; // defined, not used directly
+
+/* ===== Core Surfaces ===== */
+$bg:               #b1acb4;   /* base desktop */
+$bg-window:        #c5c1c9;   /* + lightness */
+$bg-panel:         #bbb6bf;   /* subtle lift */
+$bg-button:        #c0bcc4;   /* button face */
+
+/* ===== 3D Bevel System ===== */
+$highlight:        #d8d5db;   /* soft highlight, NOT white */
+$shadow:           #8a8690;   /* firm shadow */
+$inner:            #a29daa;   /* pressed inset */
+
+/* ===== Borders ===== */
+$border-strong:    #6e6a74;   /* window frame */
+$border-soft:      #9c98a3;
+
+/* ===== Text ===== */
+$text:             #1f1c23;   /* near-black, neutral */
+$text-secondary:   #4b4752;
+$text-disabled:    #7d7984;
+
+/* ===== Accent ===== */
+$accent:           #6f6a8f;   /* desaturated purple */
+$accent-strong:    #5b5678;
+$accent-muted:     #9f9bb8;
+
+/* ===== Semantic ===== */
+$success:          #5e8a73;
+$warning:          #9f8658;
+$error:            #9a5a64;
+
+$box-shadow: inset 1px 1px 0 $highlight,
+  inset -1px -1px 0 $shadow,
+  inset 2px 2px 0 $highlight,
+  inset -2px -2px 0 $shadow;

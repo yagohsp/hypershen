@@ -4,7 +4,7 @@ import Gdk from "gi://Gdk?version=4.0"
 import { onCleanup } from "ags"
 import { AudioOutput } from "./AudioOutput"
 import Time from "./Time"
-import AudioBar from "./AudioBar"
+import NotificationPopups from "./notifications/NotificationPopups"
 import { Gtk } from "ags/gtk4"
 
 export default function Bar({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
@@ -17,34 +17,6 @@ export default function Bar({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
     // is run from the parent <For> which allows us to destroy the window
     win.destroy()
   })
-
-  const icons = Gtk.IconTheme.get_for_display(Gdk.Display.get_default()!)
-
-  return (
-    <window
-      $={(self) => {
-        win = self
-      }}
-      visible
-      class="main-bar"
-      gdkmonitor={gdkmonitor}
-      exclusivity={Astal.Exclusivity.EXCLUSIVE}
-      anchor={TOP | LEFT | RIGHT}
-      application={app}
-    >
-      <scrolledwindow hexpand vexpand>
-        <Gtk.FlowBox
-          selectionMode={Gtk.SelectionMode.NONE}
-          rowSpacing={6}
-          columnSpacing={6}
-        >
-          {icons.iconNames.map((icon) => (
-            <image iconName={icon} pixelSize={24} />
-          ))}
-        </Gtk.FlowBox>
-      </scrolledwindow>
-    </window>
-  )
 
   return (
     <>
@@ -60,14 +32,17 @@ export default function Bar({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
         application={app}
       >
         <centerbox>
-          <box $type="end">
+          <box spacing={12} $type="end">
             <AudioOutput />
+            <Gtk.Separator visible />
             <Time />
+            {/* <Network /> */}
+            {/* <Icons /> */}
           </box>
         </centerbox>
       </window>
 
-      <AudioBar />
+      <NotificationPopups monitor={gdkmonitor} />
     </>
   )
 }

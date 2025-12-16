@@ -1,38 +1,72 @@
 @use 'colors';
 
 .main-bar {
-  background-color: #45306a;
-  min-height: 30px;
+  background-color: colors.$bg;
+  color: colors.$text;
+  min-height: 24px;
+  padding: 2px 8px;
+}
 
+.notification {
+  padding: 8px;
+  margin: 12px;
 }
 
 .audio-menu-button {
-  .audio-output-list {
-    min-width: 25em;
-    padding: 8px;
+  button {
+    box-shadow: none;
+    background-color: colors.$bg;
+  }
 
-    .audio-item {
-      .audio-name {
-        min-width: 12em;
-      }
+  .audio-popover {
+    arrow {
+      background-color: colors.$bg;
+    }
 
-      // .audio-description {
-      //   min-width: 12em;
-      // }
+    contents {
+      padding: 0;
+      border-radius: 0;
+      box-shadow: colors.$box-shadow;
+    }
 
-      .audio-button-muted {
-        background-color: #fa0035;
-      }
+    .audio-output-list {
+      min-width: 25em;
+      padding: 8px;
+      background-color: colors.$bg;
 
-      .audio-slider {
-        min-width: 15em;
+      .audio-item {
+        background-color: colors.$bg;
+
+        .audio-name {
+          min-width: 12em;
+          color: colors.$text;
+        }
+
+        // .audio-description {
+        //   min-width: 12em;
+        // }
+
+        .audio-slider {
+          min-width: 15em;
+
+        }
       }
     }
   }
 }
 
-.audio-bar {
-  min-height: 50px;
-  min-width: 50px;
-  background-color: #fff;
+.audio-popup {
+  margin-top: 50px;
+  margin-left: 30px;
+  background-color: transparent;
+
+  >box {
+    border: 3px solid colors.$bg;
+    background-color: colors.$bg;
+
+    box {
+      min-width: 30px;
+      background-color: colors.$text;
+    }
+  }
 }
