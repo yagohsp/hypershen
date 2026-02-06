@@ -8,6 +8,11 @@
     ],
     "module": "ES2022",
     "moduleResolution": "Bundler",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
     "strict": true,
     "target": "ES2020"
   }

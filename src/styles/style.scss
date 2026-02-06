@@ -1,0 +1,413 @@
+@use 'colors';
+
+window#bar {
+  padding: 0;
+  margin: 0 20px;
+  min-height: 16px;
+  background-color: transparent;
+  padding: 8px 4px;
+  border: 2px solid #9dade1;
+  border-radius: 8px;
+}
+
+.bar-container {
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+
+  .start,
+  .center,
+  .end {
+
+    >box,
+    >menubutton,
+    >button {
+      margin: 0 4px;
+    }
+  }
+
+}
+
+button {
+  border-radius: 0;
+}
+
+.workspace-container {
+  .workspace-button {
+    min-width: 24px;
+    min-height: 16px;
+    background-color: transparent;
+    background-image: none;
+    border: none;
+    margin: 0;
+    padding: 0;
+
+    image {
+      opacity: 0.6;
+      transition: all 200ms ease;
+    }
+
+    &:hover {
+      image {
+        opacity: 0.9;
+      }
+    }
+
+    &.occupied:not(.active) {
+      image {
+        opacity: 0.8;
+      }
+    }
+
+    &.active {
+      image {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.audio-output-container {
+  .audio-output-button {
+    min-width: 16px;
+    min-height: 16px;
+
+    image {
+      min-width: 14px;
+      min-height: 14px;
+      -gtk-icon-size: 14px;
+      color: #fff;
+      opacity: 0.7;
+      transition: opacity 150ms ease;
+    }
+
+    &:hover {
+
+      image {
+        opacity: 1;
+      }
+    }
+
+    &.active {
+
+      image {
+        opacity: 1;
+        filter: none;
+      }
+    }
+  }
+}
+
+menubutton {
+  label {
+    font-size: 13px;
+    font-weight: 400;
+  }
+}
+
+.calendar-container {
+  min-width: 280px;
+}
+
+.calendar-button {
+  min-width: 36px;
+  min-height: 36px;
+  font-size: 14px;
+  font-weight: 500;
+
+  label {
+    color: colors.$fg;
+  }
+
+  &:not(.other-month):not(.other-month-weekend) {
+    label {
+      opacity: 1;
+      font-weight: 600;
+    }
+  }
+
+  &.other-month,
+  &.other-month-weekend {
+    label {
+      opacity: 0.3;
+      font-weight: 400;
+    }
+  }
+
+  &.today {
+    background-color: colors.$accent;
+
+    label {
+      color: colors.$bg;
+      font-weight: 700;
+    }
+
+    &:hover {
+      background-color: colors.$accent;
+      opacity: 0.9;
+    }
+  }
+
+  &.weekend:not(.other-month):not(.other-month-weekend):not(.today) {
+    label {
+      color: colors.$accent;
+    }
+  }
+}
+
+.header {
+  margin-bottom: 8px;
+
+  .monthyear {
+    font-size: 16px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 6px;
+    background-color: transparent;
+    border: none;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  .monthshift {
+    min-width: 32px;
+    min-height: 32px;
+    padding: 4px;
+    border-radius: 6px;
+    background-color: transparent;
+    border: none;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+}
+
+.weekdays {
+  margin-bottom: 4px;
+
+  .calendar-button {
+    font-weight: 700;
+    font-size: 12px;
+    opacity: 0.7;
+
+    &.weekend label {
+      color: colors.$accent;
+    }
+  }
+}
+
+.calendar-week {}
+
+.volume-osd {
+  background-color: transparent;
+}
+
+.volume-osd-container {
+  // background-color: rgba(20, 20, 30, 0.95);
+  background-color: transparent;
+  border: 2px solid #9DADE1;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 80px;
+}
+
+.volume-osd-label {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.volume-osd-bar-container {
+  min-width: 300px;
+  min-height: 40px;
+  // background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+}
+
+.volume-osd-bar-fill {
+  background-color: #9DADE1;
+  border-radius: 2px;
+  transition: all 100ms ease;
+}
+
+// Network Status - terminal text style
+.network-container {
+  padding: 0;
+}
+
+.network-button,
+.network-status {
+  padding: 4px 8px;
+
+  label {
+    font-size: 13px;
+    font-weight: 400;
+  }
+
+  image {
+    opacity: 0.7;
+  }
+}
+
+// WiFi List Popup
+.wifi-list {
+  padding: 12px;
+  min-width: 300px;
+}
+
+.wifi-list-header {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 4px 8px;
+  margin-bottom: 8px;
+}
+
+.wifi-item {
+  padding: 8px 12px;
+  border-radius: 4px;
+
+  label {
+    font-size: 13px;
+  }
+
+  image {
+    opacity: 0.7;
+  }
+
+  .wifi-strength {
+    font-size: 11px;
+    opacity: 0.6;
+  }
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  &.active {
+    background-color: rgba(100, 150, 255, 0.2);
+
+    label {
+      font-weight: 600;
+    }
+  }
+}
+
+// Volume Control - terminal text style
+.volume-control {
+  padding: 4px 8px;
+
+  image {
+    opacity: 0.7;
+  }
+}
+
+// Volume Popup
+.volume-popup {
+  padding: 16px;
+  min-width: 280px;
+  max-width: 320px;
+}
+
+.volume-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  opacity: 0.7;
+  letter-spacing: 0.5px;
+}
+
+.volume-mute-button {
+  padding: 6px;
+  border-radius: 4px;
+  min-width: 28px;
+  min-height: 28px;
+
+  image {
+    opacity: 0.7;
+  }
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+
+    image {
+      opacity: 1;
+    }
+  }
+}
+
+.volume-slider {
+  min-width: 150px;
+
+  trough {
+    min-height: 6px;
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
+  }
+
+  highlight {
+    background-color: rgba(100, 150, 255, 0.9);
+    border-radius: 3px;
+  }
+
+  slider {
+    min-width: 16px;
+    min-height: 16px;
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 50%;
+    margin: -5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 1);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+  }
+}
+
+.volume-percentage {
+  font-size: 11px;
+  min-width: 38px;
+  opacity: 0.6;
+  font-weight: 500;
+  text-align: right;
+}
+
+separator {
+  margin: 8px 0;
+  opacity: 0.3;
+}
+
+.volume-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  opacity: 0.5;
+  margin-top: 8px;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.stream-control {
+  padding: 10px 8px;
+  border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.04);
+  margin-bottom: 4px;
+  transition: background-color 150ms ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+}
+
+.stream-label {
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.volume-container {
+  min-width: 300px;
+}

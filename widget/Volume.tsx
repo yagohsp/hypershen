@@ -21,7 +21,7 @@ function fetchIcon(appName: string) {
   return icon
 }
 
-export function AudioOutput() {
+export default function Volume() {
   const wp = AstalWp.get_default()
   const [appsVolume, setAppVolumes] = createState<{
     [serial: string]: AstalWp.Stream
