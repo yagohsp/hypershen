@@ -307,33 +307,84 @@ menubutton {
 // Volume Popup
 .volume-popup {
   padding: 16px;
-  min-width: 280px;
-  max-width: 320px;
+  min-width: 340px;
+  background-color: rgba(15, 15, 20, 0.95);
+  
+  box {
+    min-width: 0;
+  }
 }
 
-.volume-label {
-  font-size: 12px;
-  font-weight: 600;
+.volume-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.6);
   text-transform: uppercase;
-  opacity: 0.7;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
+  margin-bottom: 4px;
 }
 
-.volume-mute-button {
-  padding: 6px;
-  border-radius: 4px;
-  min-width: 28px;
-  min-height: 28px;
+.volume-slider-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  min-width: 0;
+}
+
+.volume-slider-row {
+  padding: 4px 0;
+}
+
+.output-device-row {
+  padding: 10px 12px;
+  border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.06);
+  transition: background-color 150ms ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+  }
+
+  &.active {
+    background-color: rgba(120, 180, 255, 0.2);
+
+    image {
+      opacity: 1;
+      color: rgba(120, 180, 255, 1);
+    }
+  }
 
   image {
     opacity: 0.7;
   }
 
+  label {
+    font-size: 13px;
+    font-weight: 500;
+    min-width: 0;
+  }
+}
+
+.stream-control {
+  padding: 8px 0;
+}
+
+.volume-mute-button {
+  padding: 6px;
+  border-radius: 4px;
+  min-width: 32px;
+  min-height: 32px;
+  background-color: rgba(255, 255, 255, 0.08);
+
+  image {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
   &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.15);
 
     image {
-      opacity: 1;
+      color: rgba(255, 255, 255, 1);
     }
   }
 }
@@ -343,26 +394,26 @@ menubutton {
 
   trough {
     min-height: 6px;
-    background-color: rgba(255, 255, 255, 0.15);
+    background-color: rgba(255, 255, 255, 0.2);
     border-radius: 3px;
   }
 
   highlight {
-    background-color: rgba(100, 150, 255, 0.9);
+    background-color: rgba(120, 180, 255, 1);
     border-radius: 3px;
   }
 
   slider {
     min-width: 16px;
     min-height: 16px;
-    background-color: rgba(255, 255, 255, 0.95);
+    background-color: rgba(255, 255, 255, 1);
     border-radius: 50%;
     margin: -5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 
     &:hover {
-      background-color: rgba(255, 255, 255, 1);
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      background-color: rgba(120, 180, 255, 1);
+      box-shadow: 0 2px 8px rgba(120, 180, 255, 0.5);
     }
   }
 }
@@ -370,9 +421,8 @@ menubutton {
 .volume-percentage {
   font-size: 11px;
   min-width: 38px;
-  opacity: 0.6;
-  font-weight: 500;
-  text-align: right;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 600;
 }
 
 separator {
@@ -380,34 +430,38 @@ separator {
   opacity: 0.3;
 }
 
-.volume-section-label {
-  font-size: 11px;
-  font-weight: 700;
-  opacity: 0.5;
-  margin-top: 8px;
-  margin-bottom: 6px;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
+.volume-container {
+  min-width: 340px;
 }
 
-.stream-control {
-  padding: 10px 8px;
+.power-menu {
+  padding: 0 8px;
+}
+
+.power-menu-popup {
+  padding: 8px;
+  min-width: 180px;
+  background-color: rgba(15, 15, 20, 0.95);
+}
+
+.power-menu-item {
+  padding: 10px 12px;
   border-radius: 6px;
-  background-color: rgba(255, 255, 255, 0.04);
-  margin-bottom: 4px;
+  background-color: rgba(255, 255, 255, 0.06);
   transition: background-color 150ms ease;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.08);
+    background-color: rgba(255, 255, 255, 0.12);
   }
-}
 
-.stream-label {
-  font-size: 12px;
-  font-weight: 500;
-  opacity: 0.9;
-}
+  box {
+    image {
+      opacity: 0.9;
+    }
 
-.volume-container {
-  min-width: 300px;
+    label {
+      font-size: 13px;
+      font-weight: 500;
+    }
+  }
 }

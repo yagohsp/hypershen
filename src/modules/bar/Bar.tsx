@@ -3,9 +3,9 @@ import { Astal, Gdk } from "ags/gtk4"
 import { onCleanup } from "ags"
 import NetworkStatus from "../network/NetworkStatus"
 import VolumeControl from "../volume/VolumeControl"
-import AudioOutputButtons from "../volume/AudioOutputButtons"
 import Workspaces from "../workspaces/Workspaces"
 import { Clock } from "../clock/Clock"
+import PowerMenu from "../power/PowerMenu"
 
 function Start({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
   return (
@@ -24,8 +24,8 @@ function End() {
     <box $type="end" class="end">
       <NetworkStatus />
       <VolumeControl />
-      <AudioOutputButtons />
       <Clock />
+      <PowerMenu />
     </box>
   )
 }
@@ -39,9 +39,6 @@ export default function Bar({ gdkmonitor, ...props }: BarProps) {
   const { TOP, LEFT, RIGHT } = Astal.WindowAnchor
 
   onCleanup(() => {
-    // Root components (windows) are not automatically destroyed.
-    // When the monitor is disconnected from the system, this callback
-    // is run from the parent <For> which allows us to destroy the window
     win.destroy()
   })
 
@@ -50,7 +47,6 @@ export default function Bar({ gdkmonitor, ...props }: BarProps) {
       visible
       $={(self) => {
         win = self
-        // Fix for bar size changes via margin/padding
         self.set_default_size(1, 1)
       }}
       name={"bar"}

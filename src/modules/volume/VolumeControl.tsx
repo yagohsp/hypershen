@@ -1,6 +1,7 @@
 import { createBinding, For } from "ags"
 import { Gtk } from "ags/gtk4"
 import AstalWp from "gi://AstalWp?version=0.1"
+import Pango from "gi://Pango"
 
 const wp = AstalWp.get_default()!
 
@@ -11,13 +12,14 @@ export default function VolumeControl() {
 
   const speakerVolume = createBinding(speaker, "volume")
   const speakerMuted = createBinding(speaker, "mute")
+  const speakerDescription = createBinding(speaker, "description")
   const micVolume = createBinding(microphone, "volume")
   const micMuted = createBinding(microphone, "mute")
+  const micDescription = createBinding(microphone, "description")
 
-  // Get all audio streams (applications)
   const streams = createBinding(audio, "streams")
+  const speakers = createBinding(audio, "speakers")
 
-  // Icon based on volume and mute state
   const speakerIcon = speakerVolume((vol) => {
     if (speakerMuted.peek()) return "audio-volume-muted-symbolic"
     if (vol === 0) return "audio-volume-muted-symbolic"
@@ -36,12 +38,44 @@ export default function VolumeControl() {
           cssClasses={["volume-container"]}
           maxContentHeight={500}
           propagateNaturalHeight
+          hscrollbarPolicy={Gtk.PolicyType.NEVER}
+          minContentWidth={340}
+          maxContentWidth={340}
         >
           <box orientation={1} cssClasses={["volume-popup"]} spacing={12}>
-            {/* Output Volume */}
-            <box orientation={1} spacing={8}>
-              <box spacing={8}>
-                <label label="Output" cssClasses={["volume-label"]} hexpand />
+            <box orientation={1} spacing={4}>
+              <label
+                label="Output Devices"
+                cssClasses={["volume-section-title"]}
+                halign={Gtk.Align.START}
+              />
+              <For each={speakers}>
+                {(speakerDevice) => <OutputDeviceRow speaker={speakerDevice} />}
+              </For>
+            </box>
+
+            <Gtk.Separator orientation={Gtk.Orientation.HORIZONTAL} />
+
+            <box orientation={1} spacing={6}>
+              <label
+                label={speakerDescription((d) => d || "Output")}
+                cssClasses={["volume-slider-label"]}
+                halign={Gtk.Align.START}
+                ellipsize={Pango.EllipsizeMode.END}
+                maxWidthChars={35}
+              />
+              <box spacing={8} cssClasses={["volume-slider-row"]}>
+                <slider
+                  onChangeValue={(self) => {
+                    speaker.volume = self.value
+                  }}
+                  value={speakerVolume}
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  hexpand
+                  cssClasses={["volume-slider"]}
+                />
                 <button
                   onClicked={() => speaker.set_mute(!speakerMuted.peek())}
                   cssClasses={["volume-mute-button"]}
@@ -56,30 +90,6 @@ export default function VolumeControl() {
                     pixelSize={16}
                   />
                 </button>
-              </box>
-              <box spacing={8}>
-                <Gtk.Scale
-                  hexpand
-                  drawValue={false}
-                  adjustment={
-                    <Gtk.Adjustment
-                      lower={0}
-                      upper={1}
-                      step_increment={0.01}
-                      value={speakerVolume.peek()}
-                    />
-                  }
-                  $={(self: Gtk.Scale) => {
-                    speakerVolume((v) => {
-                      self.adjustment!.set_value(v)
-                    })
-
-                    self.adjustment!.connect("value-changed", () => {
-                      speaker.set_volume(self.adjustment!.get_value())
-                    })
-                  }}
-                  cssClasses={["volume-slider"]}
-                />
                 <label
                   label={speakerVolume((v) => `${Math.round(v * 100)}%`)}
                   cssClasses={["volume-percentage"]}
@@ -87,10 +97,26 @@ export default function VolumeControl() {
               </box>
             </box>
 
-            {/* Input Volume */}
-            <box orientation={1} spacing={8}>
-              <box spacing={8}>
-                <label label="Input" cssClasses={["volume-label"]} hexpand />
+            <box orientation={1} spacing={6}>
+              <label
+                label={micDescription((d) => d || "Input")}
+                cssClasses={["volume-slider-label"]}
+                halign={Gtk.Align.START}
+                ellipsize={Pango.EllipsizeMode.END}
+                maxWidthChars={35}
+              />
+              <box spacing={8} cssClasses={["volume-slider-row"]}>
+                <slider
+                  onChangeValue={(self) => {
+                    microphone.volume = self.value
+                  }}
+                  value={micVolume}
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  hexpand
+                  cssClasses={["volume-slider"]}
+                />
                 <button
                   onClicked={() => microphone.set_mute(!micMuted.peek())}
                   cssClasses={["volume-mute-button"]}
@@ -105,30 +131,6 @@ export default function VolumeControl() {
                     pixelSize={16}
                   />
                 </button>
-              </box>
-              <box spacing={8}>
-                <Gtk.Scale
-                  hexpand
-                  drawValue={false}
-                  adjustment={
-                    <Gtk.Adjustment
-                      lower={0}
-                      upper={1}
-                      step_increment={0.01}
-                      value={micVolume.peek()}
-                    />
-                  }
-                  $={(self: Gtk.Scale) => {
-                    micVolume((v) => {
-                      self.adjustment!.set_value(v)
-                    })
-
-                    self.adjustment!.connect("value-changed", () => {
-                      microphone.set_volume(self.adjustment!.get_value())
-                    })
-                  }}
-                  cssClasses={["volume-slider"]}
-                />
                 <label
                   label={micVolume((v) => `${Math.round(v * 100)}%`)}
                   cssClasses={["volume-percentage"]}
@@ -136,17 +138,16 @@ export default function VolumeControl() {
               </box>
             </box>
 
-            {/* Separator */}
             <Gtk.Separator orientation={Gtk.Orientation.HORIZONTAL} />
 
-            {/* Application Streams */}
-            <box orientation={1} spacing={4}>
+            <box orientation={1} spacing={8}>
               <label
                 label="Applications"
-                cssClasses={["volume-section-label"]}
+                cssClasses={["volume-section-title"]}
+                halign={Gtk.Align.START}
               />
               <For each={streams}>
-                {(stream) => <StreamControl stream={stream} />}
+                {(stream) => <StreamControl key={stream.get_id()} stream={stream} />}
               </For>
             </box>
           </box>
@@ -156,19 +157,63 @@ export default function VolumeControl() {
   )
 }
 
-function StreamControl({ stream }: { stream: AstalWp.Endpoint }) {
+function OutputDeviceRow({ speaker }: { speaker: AstalWp.Endpoint }) {
+  const description = createBinding(speaker, "description")
+  const isDefault = createBinding(speaker, "isDefault")
+
+  return (
+    <button
+      onClicked={() => speaker.set_is_default(true)}
+      cssClasses={isDefault((d) =>
+        d ? ["output-device-row", "active"] : ["output-device-row"],
+      )}
+      focusOnClick={false}
+    >
+      <box spacing={8}>
+        <image
+          iconName={isDefault((d) =>
+            d ? "object-select-symbolic" : "audio-speakers-symbolic",
+          )}
+          pixelSize={16}
+        />
+        <label 
+          label={description} 
+          hexpand 
+          halign={Gtk.Align.START}
+          ellipsize={Pango.EllipsizeMode.END}
+        />
+      </box>
+    </button>
+  )
+}
+
+function StreamControl({ stream }: { stream: AstalWp.Stream }) {
   const volume = createBinding(stream, "volume")
   const muted = createBinding(stream, "mute")
   const description = createBinding(stream, "description")
 
   return (
     <box orientation={1} spacing={6} cssClasses={["stream-control"]}>
-      <box spacing={8}>
-        <label
-          label={description((d) => d || "Unknown")}
-          cssClasses={["stream-label"]}
+      <label
+        label={description((d) => d || "Unknown")}
+        cssClasses={["volume-slider-label"]}
+        halign={Gtk.Align.START}
+        ellipsize={Pango.EllipsizeMode.END}
+        maxWidthChars={35}
+      />
+      <box spacing={8} cssClasses={["volume-slider-row"]}>
+        <slider
+          onChangeValue={(self) => {
+            stream.volume = self.value
+          }}
+          value={volume}
+          min={0}
+          max={1}
+          step={0.01}
           hexpand
+          cssClasses={["volume-slider"]}
         />
+
         <button
           onClicked={() => stream.set_mute(!muted.peek())}
           cssClasses={["volume-mute-button"]}
@@ -181,30 +226,7 @@ function StreamControl({ stream }: { stream: AstalWp.Endpoint }) {
             pixelSize={14}
           />
         </button>
-      </box>
-      <box spacing={8}>
-        <Gtk.Scale
-          hexpand
-          drawValue={false}
-          adjustment={
-            <Gtk.Adjustment
-              lower={0}
-              upper={1}
-              step_increment={0.01}
-              value={volume.peek()}
-            />
-          }
-          $={(self: Gtk.Scale) => {
-            volume((v) => {
-              self.adjustment!.set_value(v)
-            })
 
-            self.adjustment!.connect("value-changed", () => {
-              stream.set_volume(self.adjustment!.get_value())
-            })
-          }}
-          cssClasses={["volume-slider"]}
-        />
         <label
           label={volume((v) => `${Math.round(v * 100)}%`)}
           cssClasses={["volume-percentage"]}

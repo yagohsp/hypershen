@@ -54,7 +54,6 @@ function WiFiSelector({ wifi }: { wifi: AstalNetwork.Wifi }) {
 function WiFiList({ wifi }: { wifi: AstalNetwork.Wifi }) {
   const accessPoints = createBinding(wifi, "accessPoints")
 
-  // Sort by strength, remove duplicates
   const sortedAPs = accessPoints((aps) => {
     const seen = new Map<string, AstalNetwork.AccessPoint>()
 
@@ -126,9 +125,8 @@ function AccessPointItem({
 function WiredStatus({ wired }: { wired: AstalNetwork.Wired }) {
   const state = createBinding(wired, "state")
   let imageWidget: any
-  let pingMs = -1 // -1 means loading, -2 means offline
+  let pingMs = -1
 
-  // Ping Google every 2 seconds
   const updatePing = async () => {
     try {
       const { exec } = await import("ags/process")
@@ -137,10 +135,9 @@ function WiredStatus({ wired }: { wired: AstalNetwork.Wired }) {
       const endTime = Date.now()
       pingMs = endTime - startTime
     } catch (e) {
-      pingMs = -2 // offline
+      pingMs = -2
     }
 
-    // Update tooltip and icon
     if (imageWidget) {
       const status = getStatusText(state.peek())
       imageWidget.set_tooltip_text(`${status} | ${getPingText(pingMs)}`)
@@ -170,12 +167,10 @@ function WiredStatus({ wired }: { wired: AstalNetwork.Wired }) {
   }
 
   const getPingIcon = (s: AstalNetwork.DeviceState, ping: number) => {
-    // If not connected, show disconnected icon
     if (s !== AstalNetwork.DeviceState.ACTIVATED) {
       return "network-wired-disconnected-symbolic"
     }
 
-    // Show signal quality based on ping
     if (ping === -2) return "network-cellular-offline-symbolic"
     if (ping === -1) return "network-wired-acquiring-symbolic"
     if (ping < 20) return "network-cellular-signal-excellent-symbolic"
@@ -185,7 +180,6 @@ function WiredStatus({ wired }: { wired: AstalNetwork.Wired }) {
     return "network-cellular-signal-none-symbolic"
   }
 
-  // Start ping interval
   updatePing()
   setInterval(updatePing, 2000)
 

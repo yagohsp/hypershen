@@ -3,7 +3,6 @@ import { createBinding, createEffect, For } from "ags"
 import { Gtk } from "ags/gtk4"
 import Gdk from "gi://Gdk"
 
-// Absolute paths to workspace images
 const ACTIVE_IMAGE = "/home/yago/y/hypershen/src/assets/workspace-active.png"
 const INACTIVE_IMAGE =
   "/home/yago/y/hypershen/src/assets/workspace-inactive.png"
@@ -26,7 +25,6 @@ function WorkspaceButton({ ws }: WorkspaceButtonProps) {
     const isActive = focused.id === ws.id
     const hasClients = allClients.some((c) => c.workspace.id === ws.id)
 
-    // Update image
     try {
       if (isActive) {
         const texture = Gdk.Texture.new_from_filename(ACTIVE_IMAGE)
@@ -41,7 +39,6 @@ function WorkspaceButton({ ws }: WorkspaceButtonProps) {
       console.error("Failed to load workspace image:", e)
     }
 
-    // Add occupied class if workspace has windows
     if (hasClients) {
       button.add_css_class("occupied")
     } else {
@@ -66,7 +63,6 @@ function WorkspaceButton({ ws }: WorkspaceButtonProps) {
       <image
         $={(self) => {
           image = self
-          // Set initial image
           try {
             const isActive = focusedWorkspace.peek().id === ws.id
             const texture = Gdk.Texture.new_from_filename(
@@ -91,27 +87,12 @@ export default function Workspaces({ gdkmonitor }: WorkspacesProps) {
   const hyprland = AstalHyprland.get_default()
   const workspaces = createBinding(hyprland, "workspaces")
 
-  // Get the monitor for this GDK monitor by matching connector names
   const hyprMonitors = hyprland.get_monitors()
   const gdkConnector = gdkmonitor.get_connector()
 
-  console.log("GDK Monitor connector:", gdkConnector)
-  console.log(
-    "Available Hyprland monitors:",
-    hyprMonitors.map((m) => `${m.id}: ${m.name}`),
-  )
-
-  // Match by connector name (DP-1, DP-2, etc)
   const hyprMonitor = hyprMonitors.find((m) => m.name === gdkConnector)
 
   if (!hyprMonitor) {
-    console.warn(
-      "Could not find Hyprland monitor for GDK connector:",
-      gdkConnector,
-    )
-    console.warn("Falling back to showing all workspaces")
-
-    // Show all workspaces as fallback
     const allWorkspaces = workspaces((wsList) =>
       wsList.sort((a, b) => a.id - b.id),
     )

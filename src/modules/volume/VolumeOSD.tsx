@@ -75,7 +75,6 @@ export default function VolumeOSD({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
                 width_request={volumePercentage}
                 $={(self) => {
                   const percentage = muted.peek() ? 0 : _volumePercentage
-                  print(percentage)
                   self.set_size_request(percentage * 3, -1)
                 }}
               />
